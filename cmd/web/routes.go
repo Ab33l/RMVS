@@ -1,9 +1,10 @@
 package main
 
 import (
-	"lastdance/pkg/config"
-	"lastdance/pkg/handlers"
 	"net/http"
+
+	"github.com/Ab33l/rmvs/pkg/config"
+	"github.com/Ab33l/rmvs/pkg/handlers"
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
@@ -18,6 +19,9 @@ func routes(app *config.AppConfig) http.Handler {
 
 	mux.Get("/", handlers.Repo.Home)
 	mux.Get("/about", handlers.Repo.About)
+
+	fileServer := http.FileServer(http.Dir("./static/"))
+	mux.Handle("/static/*", http.StripPrefix("/static", fileServer))
 
 	return mux
 }

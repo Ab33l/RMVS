@@ -1,10 +1,11 @@
 package handlers
 
 import (
-	"lastdance/pkg/config"
-	"lastdance/pkg/models"
-	"lastdance/pkg/render"
 	"net/http"
+
+	"github.com/Ab33l/rmvs/pkg/config"
+	"github.com/Ab33l/rmvs/pkg/models"
+	"github.com/Ab33l/rmvs/pkg/render"
 )
 
 //Reopsitory pattern

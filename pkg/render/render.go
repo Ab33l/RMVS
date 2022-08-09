@@ -4,11 +4,12 @@ import (
 	"bytes"
 	"fmt"
 	"html/template"
-	"lastdance/pkg/config"
-	"lastdance/pkg/models"
 	"log"
 	"net/http"
 	"path/filepath"
+
+	"github.com/Ab33l/rmvs/pkg/config"
+	"github.com/Ab33l/rmvs/pkg/models"
 )
 
 var functions = template.FuncMap{}

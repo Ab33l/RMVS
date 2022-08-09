@@ -2,12 +2,13 @@ package main
 
 import (
 	"fmt"
-	"lastdance/pkg/config"
-	"lastdance/pkg/handlers"
-	"lastdance/pkg/render"
 	"log"
 	"net/http"
 	"time"
+
+	"github.com/Ab33l/rmvs/pkg/config"
+	"github.com/Ab33l/rmvs/pkg/handlers"
+	"github.com/Ab33l/rmvs/pkg/render"
 
 	"github.com/alexedwards/scs/v2"
 )
