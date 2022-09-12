@@ -1,3 +1,99 @@
+<?php
+include '../dbConfig.php';
+// Initialize the session
+session_start();
+ 
+// Check if the user is already logged in, if yes then redirect him to welcome page
+if(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true){
+    header("location: ../darkpan/gohubhome.php");
+    exit;
+}
+
+// Define variables and initialize with empty values
+$email = $password = $newpassword = "";
+$email_err = $password_err = $login_err = "";
+ 
+// Processing form data when form is submitted
+if($_SERVER["REQUEST_METHOD"] == "POST"){
+ 
+    // Check if username is empty
+    if(empty(trim($_POST["email"]))){
+        $username_err = "Please enter email.";
+    } else{
+        $email = trim($_POST["email"]);
+    }
+    
+    // Check if password is empty
+    if(empty(trim($_POST["password"]))){
+        $password_err = "Please enter your password.";
+    } else{
+        $password = trim($_POST["password"]);
+    }
+
+	$newpassword = hash("sha256", $password);
+    
+    // Validate credentials
+    if(empty($email_err) && empty($password_err)){
+        // Prepare a select statement
+        $sql = "SELECT sessionId, email_address, full_name, password FROM customers WHERE email_address = ?";
+        
+        if($stmt = mysqli_prepare($db, $sql)){
+            // Bind variables to the prepared statement as parameters
+            mysqli_stmt_bind_param($stmt, "s", $param_email);
+            
+            // Set parameters
+            $param_email = $email;
+            
+            // Attempt to execute the prepared statement
+            if(mysqli_stmt_execute($stmt)){
+                // Store result
+                mysqli_stmt_store_result($stmt);
+                
+                // Check if username exists, if yes then verify password
+                if(mysqli_stmt_num_rows($stmt) == 1){                    
+                    // Bind result variables
+                    mysqli_stmt_bind_result($stmt, $sessionId, $email_address, $full_name, $hashed_password);
+                    if(mysqli_stmt_fetch($stmt)){
+                        if($newpassword == $hashed_password){
+							//$row = mysqli_fetch_assoc($stmt);
+                            // Password is correct, so start a new session
+                            session_start();
+							$_SESSION["loggedin"] = true;
+							$_SESSION["full_name"] = $full_name;
+							$_SESSION["sessionId"] = $sessionId;
+							$_SESSION["email_address"] = $email_address;
+                            
+                            // Store data in session variables
+                            //$_SESSION["loggedin"] = $sessionId;
+                            // $_SESSION["sessionId"] = $sessionId;
+							// $_SESSION["full_name"] = $full_name;
+                            //$_SESSION["email_address"] = $email_address;                            
+                            
+                            // Redirect user to welcome page
+                            header("location: /gohub/build/darkpan/gohubhome.php");
+                        } else{
+                            // Password is not valid, display a generic error message
+                            echo "Invalid Password.";
+                        }
+                    }
+                } else{
+                    // Username doesn't exist, display a generic error message
+                    echo "Invalid email or password.";
+                }
+            } else{
+                echo "Oops! Something went wrong. Please try again later.";
+            }
+
+            // Close statement
+            mysqli_stmt_close($stmt);
+        }
+    }
+    
+    // Close connection
+    //mysqli_close($db);
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -78,16 +174,18 @@
 			<!-- SIGN IN -->
 			<div class="col align-items-center flex-col sign-in">
 				<div class="form-wrapper align-items-center">
+				<form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" autocomplete="off">
 					<div class="form sign-in">
 						<div class="input-group">
 							<i class='bx bxs-user'></i>
-							<input type="text" placeholder="Email Address">
+							<input type="email" placeholder="Email Address" name="email">
 						</div>
 						<div class="input-group">
 							<i class='bx bxs-lock-alt'></i>
-							<input type="password" placeholder="Password">
+							<input type="password" name="password" placeholder="Password">
 						</div>
-						<button onClick="location.href='../darkpan/index.html'">
+						<!-- <button onClick="location.href='../darkpan/index.html'"> -->
+						<button type="submit">
 							Sign in
 						</button>
 						<p>
@@ -104,6 +202,7 @@
 							</b>
 						</p>
 					</div>
+				</form>
 				</div>
 				<div class="form-wrapper">
 					<div class="social-list align-items-center sign-in">
@@ -122,6 +221,7 @@
 					</div>
 				</div>
 			</div>
+	
 			<!-- END SIGN IN -->
 		</div>
 		<!-- END FORM SECTION -->

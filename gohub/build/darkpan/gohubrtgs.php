@@ -1,3 +1,14 @@
+<?php
+include '../dbConfig.php';
+
+session_start();
+
+if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
+    header("location: /gohub/build/rmvs-login/signin.php");
+    exit;
+}
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -42,6 +53,12 @@
 
     <!-- Template Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
+
+    <style>
+        .datepicker {
+            z-index: 10000;
+        }
+    </style>
 </head>
 
 <body>
@@ -67,7 +84,7 @@
                         <div class="bg-success rounded-circle border border-2 border-white position-absolute end-0 bottom-0 p-1"></div>
                     </div>
                     <div class="ms-3">
-                        <h6 class="mb-0">Kyle Murray</h6>
+                        <h6 class="mb-0"><?php echo $_SESSION['full_name']; ?></h6>
                         <span>Premier Client</span>
                     </div>
                 </div>
@@ -81,7 +98,7 @@
                             <a href="element.html" class="dropdown-item">Business Account</a>
                         </div>
                     </div>
-                    <a href="widget.html" class="nav-item nav-link active"><i class="fa fa-th me-2"></i>RTGS</a>
+                    <a href="gohubrtgs.php" class="nav-item nav-link active"><i class="fa fa-th me-2"></i>RTGS</a>
                     <a href="form.html" class="nav-item nav-link"><i class="fa fa-keyboard me-2"></i>Tele-Transfers</a>
                     <a href="table.html" class="nav-item nav-link"><i class="fa fa-table me-2"></i>Fixed Deposits</a>
                     <a href="chart.html" class="nav-item nav-link"><i class="fa fa-chart-bar me-2"></i>Charts</a>
@@ -202,7 +219,7 @@
             <!-- Widget Start -->
             <div class="container-fluid pt-4 px-4">
 
-                <button type="button" class="btn btn-outline-primary" style="margin-left:84%;">Make a RTGS Transfer</button> 
+                <button type="button" class="btn btn-outline-primary" style="margin-left:84%;" onclick="location.href='gohubrtgscrt.php'">Make a RTGS Transfer</button> 
                 <div class="row g-4">
                 <!--SAMPLE TXNS -->
                 <div class="container-fluid pt-4 px-4">
@@ -479,7 +496,29 @@
         }); 
 
         document.getElementById("search_txns").addEventListener("click", function(){
-            attention.success({msg: "Hello World"});
+        let html = `
+        <form id="check-availability-form" action="" method="post" novalidate class="needs-validation">
+            <div class="form-row">
+                <div class="col">
+                    <div class="form-row" id="txn-dates-modal">
+                        <div class="col">
+                            <input disabled required type="text" name="start" id="start" placeholder="Start Date">
+                        </div>
+                        <div class="col">
+                            <input disabled required type="text" name="end" id="end" placeholder="End Date">
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </form>
+        `;
+        attention.customSearch({
+            title: 'Select your transaction dates',
+            msg: html,
+        });
+
+            //attention.success({msg: "Hello World"});
             //attention.error({msg: "Error"});
             //attention.toast({msg: "Hello World"});
         })
@@ -547,10 +586,47 @@
                 })
             }
 
+            async function customSearch(c) {
+             const {
+                    msg = "",
+                    title = "",
+                } = c;
+
+            const { value: formValues } = await Swal.fire({
+                title: title,
+                html: msg,
+                backdrop: false,
+                focusConfirm: false,
+                showCancelButton: true,
+                willOpen: () => {
+                    const elem = document.getElementById("txn-dates-modal");
+                    const rp = new DateRangePicker(elem, {
+                        format: 'yyyy-mm-dd',
+                        showOnFocus: true,
+                    })
+                },
+                didOpen: () => {
+                    document.getElementById("start").removeAttribute("disabled");
+                    document.getElementById("end").removeAttribute("disabled");
+                },
+                preConfirm: () => {
+                    return [
+                        document.getElementById('start').value,
+                        document.getElementById('end').value
+                    ]
+                }
+            })
+
+            if (formValues) {
+                Swal.fire(JSON.stringify(formValues))
+            }
+        }
+
             return {
                 toast: toast,
                 success: success,
                 error: error,
+                customSearch: customSearch,
             }
         }
 

@@ -1,9 +1,24 @@
+<?php
+session_start();
+include '../dbConfig.php';
+// Initialize the session
+ 
+// Check if the user is logged in, if not then redirect him to login page
+if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
+    header("location: /gohub/build/rmvs-login/signin.php");
+    exit;
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="utf-8">
     <title>Gohub</title>
+ 
+     <!--SweetAlert-->
+     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+     <!--SweetAlert-->
 
     <link rel="apple-touch-icon" sizes="180x180" href="../assets/img/favicons/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="../assets/img/favicons/favicon-32x32.png">
@@ -64,7 +79,7 @@
                         <div class="bg-success rounded-circle border border-2 border-white position-absolute end-0 bottom-0 p-1"></div>
                     </div>
                     <div class="ms-3">
-                        <h6 class="mb-0">Kyle Murray</h6>
+                        <h6 class="mb-0"><?php echo $_SESSION["full_name"]; ?></h6>
                         <span>Premier Client</span>
                     </div>
                 </div>
@@ -78,7 +93,7 @@
                             <a href="element.html" class="dropdown-item">Business Account</a>
                         </div>
                     </div>
-                    <a href="widget.html" class="nav-item nav-link"><i class="fa fa-th me-2"></i>RTGS</a>
+                    <a href="gohubrtgs.php" class="nav-item nav-link"><i class="fa fa-th me-2"></i>RTGS</a>
                     <a href="form.html" class="nav-item nav-link"><i class="fa fa-keyboard me-2"></i>Tele-Transfers</a>
                     <a href="table.html" class="nav-item nav-link"><i class="fa fa-table me-2"></i>Fixed Deposits</a>
                     <a href="chart.html" class="nav-item nav-link"><i class="fa fa-chart-bar me-2"></i>Charts</a>
@@ -177,12 +192,12 @@
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
                             <img class="rounded-circle me-lg-2" src="img/user.jpg" alt="" style="width: 40px; height: 40px;">
-                            <span class="d-none d-lg-inline-flex">Kyle Murray</span>
+                            <span class="d-none d-lg-inline-flex"><?php echo $_SESSION["full_name"]; ?></span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-end bg-secondary border-0 rounded-0 rounded-bottom m-0">
                             <a href="#" class="dropdown-item">My Profile</a>
                             <a href="#" class="dropdown-item">Settings</a>
-                            <a href="#" class="dropdown-item">Log Out</a>
+                            <a href="/gohub/build/rmvs-login/signout.php" class="dropdown-item">Log Out</a>
                         </div>
                     </div>
                 </div>
@@ -259,7 +274,6 @@
             </div>
             <!-- Sales Chart End -->
 
-
             <!-- Recent Sales Start -->
             <div class="container-fluid pt-4 px-4">
                 <div class="bg-secondary text-center rounded p-4">
@@ -271,28 +285,59 @@
                         <table class="table text-start align-middle table-bordered table-hover mb-0">
                             <thead>
                                 <tr class="text-white">
-                                    <th scope="col"><input class="form-check-input" type="checkbox"></th>
+                                    <th scope="col"><input class="form-check-input"></th>
                                     <th scope="col">Date</th>
                                     <th scope="col">Transaction Type</th>
-                                    <th scope="col">Beneficiary's Name</th>
-                                    <th scope="col">Beneficiary's Account Number</th>
+                                    <th scope="col">Beneficiary</th>
+                                    <th scope="col">Beneficiary's Bank</th>
+                                    <th scope="col">Beneficiary's Account</th>
                                     <th scope="col">Amount</th>
                                     <th scope="col">Status</th>
                                     <th scope="col">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
+                            <?php
+                            //get rows query
+                            $sessionId = $_SESSION["sessionId"];
+                            $query = $db->query("SELECT * FROM instructions WHERE customerId = $sessionId ORDER BY instructionsId DESC LIMIT 5");
+                            if($query->num_rows > 0){ 
+                                while($row = $query->fetch_assoc()){
+                            ?>
                                 <tr>
-                                    <td><input class="form-check-input" type="checkbox"></td>
-                                    <td>01 Jan 2045</td>
-                                    <td>Telegraphic Transfer (TT)</td>
-                                    <td>Jhon Doe</td>
-                                    <td>098765432</td>
-                                    <td>$123</td>
-                                    <td>Paid</td>
-                                    <td><a class="btn btn-sm btn-primary" href="">Detail</a></td>
+                                    <td><input class="form-check-input"></td>
+                                    <td><?php echo $row['created']; ?></td>
+                                    <td><?php 
+                                    if($row['instructionItemId'] == '3'){
+                                        echo 'RTGS';
+                                    }
+                                    else{
+                                           echo 'Telegraphic Transfer';
+                                        }; ?></td>
+                                    <td><?php echo $row['beneficiaryName']; ?></td>
+                                    <td><?php echo $row['beneficiaryBank']; ?></td>
+                                    <td><?php echo $row['beneficiaryAcNo']; ?></td>
+                                    <td><?php echo $row['currency']. ' ' .$row['amount']; ?></td>
+                                    <td><?php 
+                                    if($row['instructionStatus'] == '0'){
+                                        echo "Received";
+                                    }
+                                    elseif($row['instructionStatus'] == '1'){ 
+                                        echo "Being Processed";
+                                    }
+                                    else{
+                                        echo 'Transaction Complete';
+                                    }; ?></td>
+                                    <?php 
+                                    $_SESSION['instructionsId'] = $row['instructionsId']; 
+                                    ?> 
+                                    <!--<td><input type="button" class="btn btn-sm btn-primary" name="view" value="Detail" id="<?php echo $row["instructionId"]; ?>"/></td>-->
+                                    <td><button type="button" class="btn btn-sm btn-primary txn-details"  onclick="location.href='selectTxn.php?instructionsId=$instructionsId'">Detail</button></td>
                                 </tr>
-                                <tr>
+                                <?php } }else{ ?>
+                                <p>Transact with Us to view your transactions</p>
+                                <?php } ?>
+                                <!--<tr>
                                     <td><input class="form-check-input" type="checkbox"></td>
                                     <td>01 Jan 2045</td>
                                     <td>Real Time Gross Settlement (RTGS)</td>
@@ -331,7 +376,7 @@
                                     <td>$123</td>
                                     <td>Fixed</td>
                                     <td><a class="btn btn-sm btn-primary" href="">Detail</a></td>
-                                </tr>
+                                </tr>-->
                             </tbody>
                         </table>
                     </div>
@@ -481,6 +526,22 @@
         </div>
         <!-- Content End -->
 
+
+        <div id="dataModal" class="modal fade">  
+      <div class="modal-dialog">  
+           <div class="modal-content">  
+                <div class="modal-header">  
+                     <button type="button" class="close" data-dismiss="modal">&times;</button>  
+                     <h4 class="modal-title">Transaction Details</h4>  
+                </div>  
+                <div class="modal-body" id="instructionDetail">  
+                </div>  
+                <div class="modal-footer">  
+                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>  
+                </div>  
+           </div>  
+      </div>  
+ </div>
 
         <!-- Back to Top -->
         <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
