@@ -35,7 +35,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     // Validate credentials
     if(empty($email_err) && empty($password_err)){
         // Prepare a select statement
-        $sql = "SELECT sessionId, email_address, full_name, password FROM customers WHERE email_address = ?";
+        $sql = "SELECT sessionId, email_address, full_name, status, password FROM customers WHERE email_address = ?";
         
         if($stmt = mysqli_prepare($db, $sql)){
             // Bind variables to the prepared statement as parameters
@@ -52,9 +52,9 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                 // Check if username exists, if yes then verify password
                 if(mysqli_stmt_num_rows($stmt) == 1){                    
                     // Bind result variables
-                    mysqli_stmt_bind_result($stmt, $sessionId, $email_address, $full_name, $hashed_password);
+                    mysqli_stmt_bind_result($stmt, $sessionId, $email_address, $full_name, $status, $hashed_password);
                     if(mysqli_stmt_fetch($stmt)){
-                        if($newpassword == $hashed_password){
+                        if($newpassword == $hashed_password && $status == 1){
 							//$row = mysqli_fetch_assoc($stmt);
                             // Password is correct, so start a new session
                             session_start();
@@ -62,6 +62,9 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 							$_SESSION["full_name"] = $full_name;
 							$_SESSION["sessionId"] = $sessionId;
 							$_SESSION["email_address"] = $email_address;
+							$_SESSION["tt_success"] = false;
+							$_SESSION["rtgs_success"] = false;
+							$_SESSION["log_time"] = false;
                             
                             // Store data in session variables
                             //$_SESSION["loggedin"] = $sessionId;
@@ -70,7 +73,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                             //$_SESSION["email_address"] = $email_address;                            
                             
                             // Redirect user to welcome page
-                            header("location: /gohub/build/darkpan/gohubhome.php");
+                            //header("location: /gohub/build/darkpan/gohubhome.php");
+							header("location: /gohub/build/rmvs-login/authenticator/index.php");
                         } else{
                             // Password is not valid, display a generic error message
                             echo "Invalid Password.";

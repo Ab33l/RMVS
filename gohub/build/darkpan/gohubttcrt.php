@@ -2,6 +2,99 @@
 include '../dbConfig.php';
 
 session_start();
+// Check if the user is already logged in, if yes then redirect him to welcome page
+if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
+    header("location: /gohub/build/rmvs-login/signin.php");
+    exit;
+}
+
+$fullname = $_SESSION["full_name"];
+$sessionId = $_SESSION["sessionId"];
+
+// Define variables and initialize with empty values
+date_default_timezone_set('Africa/Nairobi');
+$nowdate = date('Y-m-d H:i:s');
+
+$remsac = $bensac = $bensname = $bankremto = $swiftcode = $amount = $conrate = $paymentpurpose = $currency = $rmcomments = "";
+
+// Processing form data when form is submitted
+if($_SERVER["REQUEST_METHOD"] == "POST"){
+ 
+    // Check if username is empty
+    if(empty(trim($_POST["remsac"]))){
+        $username_err = "Please enter remsac.";
+    } else{
+        $remsac = trim($_POST["remsac"]);
+    }
+
+    if(empty(trim($_POST["bensac"]))){
+        $username_err = "Please enter bensac.";
+    } else{
+        $bensac = trim($_POST["bensac"]);
+    }
+
+    if(empty(trim($_POST["bensname"]))){
+        $username_err = "Please enter bensname.";
+    } else{
+        $bensname = trim($_POST["bensname"]);
+    }
+
+    if(empty(trim($_POST["bankremto"]))){
+        $username_err = "Please enter bankremto.";
+    } else{
+        $bankremto = trim($_POST["bankremto"]);
+    }
+
+    if(empty(trim($_POST["swiftcode"]))){
+        $username_err = "Please enter swiftcode.";
+    } else{
+        $swiftcode = trim($_POST["swiftcode"]);
+    }
+
+    if(empty(trim($_POST["amount"]))){
+        $username_err = "Please enter amount.";
+    } else{
+        $amount = trim($_POST["amount"]);
+    }
+
+    if(empty(trim($_POST["conrate"]))){
+        $username_err = "Please enter conrate.";
+    } else{
+        $conrate = trim($_POST["conrate"]);
+    }
+
+    if(empty(trim($_POST["currency"]))){
+        $username_err = "Please enter currency.";
+    } else{
+        $currency = trim($_POST["currency"]);
+    }
+
+    $paymentpurpose = trim($_POST["paymentpurpose"]);
+    $rmcomments = trim($_POST["rmcomments"]);
+
+    $stmt = $db->prepare("INSERT INTO instructions(instructionItemId, customerId, beneficiaryName, beneficiaryAcNo, beneficiaryBank, beneficiaryBankSwift, remitterName, remitterAcNo, currency, amount, rate, paymentPurpose, rmNarration, created, modified) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param('iisisssisiissss', $instruction_ItemId, $session_Id, $bens_name, $bens_ac, $bank_remto, $swift_code, $rems_name, $rems_ac, $curr_ency, $am_ount, $r_ate, $payment_Purpose, $rmNarration, $created, $modified);
+    $instruction_ItemId = 4;
+    $session_Id = $sessionId;
+    $bens_name = $bensname;
+    $bens_ac = $bensac;
+    $bank_remto = $bankremto;
+    $swift_code = $swiftcode;
+    $rems_name = $fullname;
+    $rems_ac = $remsac;
+    $curr_ency = $currency;
+    $am_ount = $amount;
+    $r_ate = $conrate;
+    $payment_Purpose = $paymentpurpose;
+    $rmNarration = $rmcomments;
+    $created = $nowdate;
+    $modified = $nowdate;
+
+    $stmt->execute();
+    $stmt->close();
+    $_SESSION["tt_success"] = true;
+    header("location: /gohub/build/darkpan/gohubtt.php");
+}
 ?>
 
 <!DOCTYPE html>
@@ -86,7 +179,7 @@ tr:nth-child(even) {
         <div class="sidebar pe-4 pb-3">
             <nav class="navbar bg-secondary navbar-dark">
                 <a href="gohubhome.php" class="navbar-brand mx-4 mb-3">
-                    <h3 class="text-primary"><i class="fa fa-user-edit me-2"></i>GoHub</h3>
+                    <img src="../assets/img/icons/Logo.png" height="35" alt="logo" />
                 </a>
                 <div class="d-flex align-items-center ms-4 mb-4">
                     <div class="position-relative">
@@ -99,7 +192,7 @@ tr:nth-child(even) {
                     </div>
                 </div>
                 <div class="navbar-nav w-100">
-                    <a href="index.html" class="nav-item nav-link"><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
+                    <a href="gohubhome.php" class="nav-item nav-link"><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-laptop me-2"></i>Account</a>
                         <div class="dropdown-menu bg-transparent border-0">
@@ -108,9 +201,9 @@ tr:nth-child(even) {
                             <a href="element.html" class="dropdown-item">Business Account</a>
                         </div>
                     </div>
-                    <a href="widget.html" class="nav-item nav-link active"><i class="fa fa-th me-2"></i>RTGS</a>
-                    <a href="form.html" class="nav-item nav-link"><i class="fa fa-keyboard me-2"></i>Tele-Transfers</a>
-                    <a href="table.html" class="nav-item nav-link"><i class="fa fa-table me-2"></i>Fixed Deposits</a>
+                    <a href="gohubrtgs.php" class="nav-item nav-link"><i class="fa fa-th me-2"></i>RTGS</a>
+                    <a href="gohubtt.php" class="nav-item nav-link active"><i class="fa fa-keyboard me-2"></i>Tele-Transfers</a>
+                    <a href="gohubfd.php" class="nav-item nav-link"><i class="fa fa-table me-2"></i>Fixed Deposits</a>
                     <a href="chart.html" class="nav-item nav-link"><i class="fa fa-chart-bar me-2"></i>Charts</a>
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="far fa-file-alt me-2"></i>Pages</a>
@@ -213,12 +306,12 @@ tr:nth-child(even) {
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
                             <img class="rounded-circle me-lg-2" src="img/user.jpg" alt="" style="width: 40px; height: 40px;">
-                            <span class="d-none d-lg-inline-flex">Kyle Murray</span>
+                            <span class="d-none d-lg-inline-flex"><?php echo $_SESSION["full_name"]; ?></span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-end bg-secondary border-0 rounded-0 rounded-bottom m-0">
                             <a href="#" class="dropdown-item">My Profile</a>
                             <a href="#" class="dropdown-item">Settings</a>
-                            <a href="#" class="dropdown-item">Log Out</a>
+                            <a href="/gohub/build/rmvs-login/signout.php" class="dropdown-item">Log Out</a>
                         </div>
                     </div>
                 </div>
@@ -228,80 +321,91 @@ tr:nth-child(even) {
 
             <!-- Widget Start -->
             <div class="container-fluid pt-4 px-4">
-            <div class="col-sm-12 col-xl-6">
+            <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" autocomplete="off">
                         <div class="bg-secondary rounded h-100 p-4" style="width:70%;margin-left:15%;">
                             <h6 class="mb-4">Telegraphic Transfers (T.T) Form</h6>
                             <div class="form-floating mb-3">
                                 <input type="tel" class="form-control" id="floatingInput"
-                                    placeholder="Remitter's Account Number">
+                                    placeholder="Remitter's Account Number" name="remsac" required>
                                 <label for="floatingInput">Remitter's Account Number</label>
                             </div>
                             <hr>
                             <div class="form-floating mb-3">
-                                <input type="number" class="form-control" id="floatingInput" min="1"
-                                    placeholder="Amount">
-                                <label for="floatingInput">Amount</label>
+                                <input type="tel" class="form-control" id="floatingInput"
+                                    placeholder="Beneficiary's Account Number" name="bensac" required>
+                                <label for="floatingInput">Beneficiary's Account Number</label>
                             </div>
                             <hr>
                             <div class="form-floating mb-3">
-                                <input type="number" class="form-control" id="floatingInput" min="1"
-                                    placeholder="Amount">
+                                <input type="text" class="form-control" id="floatingInput"
+                                    placeholder="Beneficiary's Full Name" name="bensname" required>
+                                <label for="floatingInput">Beneficiary's Full Name</label>
+                            </div>
+                            <hr>
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="floatingInput"
+                                    placeholder="Bank Remmiting To" name="bankremto" required>
+                                <label for="floatingInput">Bank Remmiting To</label>
+                            </div>
+                            <hr>
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="floatingInput"
+                                    placeholder="Swift Code" name="swiftcode" required>
                                 <label for="floatingInput">Swift Code</label>
                             </div>
                             <hr>
                             <div class="form-floating mb-3">
                                 <input type="number" class="form-control" id="floatingInput" min="1"
-                                    placeholder="Amount">
-                                <label for="floatingInput">Counter Rate</label>
-                            </div>
-                            <hr>
-                            <div class="form-floating mb-3">
-                                <input type="tel" class="form-control" id="floatingInput"
-                                    placeholder="Beneficiary's Account Number">
-                                <label for="floatingInput">Beneficiary's Account Number</label>
+                                    placeholder="Conversion Rate" name="conrate">
+                                <label for="floatingInput">Conversion Rate</label>
                             </div>
                             <hr>
                             <label for="floatingSelect">Currency To Be Remitted:  </label>
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1" default>
+                                <input class="form-check-input" type="checkbox" id="inlineCheckbox1" name="currency" value="KSH" default>
                                 <label class="form-check-label" for="inlineCheckbox1">KSH</label>
                             </div>
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2">
+                                <input class="form-check-input" type="checkbox" id="inlineCheckbox2" name="currency" value="USD">
                                 <label class="form-check-label" for="inlineCheckbox2">USD</label>
                             </div>
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="inlineCheckbox3" value="option3">
+                                <input class="form-check-input" type="checkbox" id="inlineCheckbox3" name="currency" value="GBP">
                                 <label class="form-check-label" for="inlineCheckbox3">GBP</label>
                             </div>
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="inlineCheckbox3" value="option4">
+                                <input class="form-check-input" type="checkbox" id="inlineCheckbox3" name="currency" value="EURO">
                                 <label class="form-check-label" for="inlineCheckbox3">EURO</label>
                             </div>
-                            <hr>
-                            <div class="form-floating">
-                                <textarea class="form-control" placeholder="Leave a comment here"
-                                    id="floatingTextarea" style="height: 150px;"></textarea>
-                                <label for="floatingTextarea">Purpose of Payment</label>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" id="inlineCheckbox3" name="currency" value="INR">
+                                <label class="form-check-label" for="inlineCheckbox3">INR</label>
                             </div>
                             <hr>
                             <div class="form-floating mb-3">
-                                <select class="form-select" id="floatingSelect"
-                                    aria-label="Floating label select example">
-                                    <!-- <option selected>Branch Remitting from</option> -->
-                                    <option value="1">Karen</option>
-                                    <option value="2">Premier and Flagship</option>
-                                </select>
-                                <label for="floatingSelect">Branch Remitting from</label>
+                                <input type="number" class="form-control" id="floatingInput" min="1"
+                                    placeholder="Amount" name="amount" required>
+                                <label for="floatingInput">Amount</label>
                             </div>
                             <hr>
                             <div class="form-floating">
-                                <textarea class="form-control" placeholder="Leave a comment here"
-                                    id="floatingTextarea" style="height: 150px;"></textarea>
+                                <textarea class="form-control" placeholder="Purpose of Payment"
+                                    id="floatingTextarea" style="height: 150px;" name="paymentpurpose"></textarea>
+                                <label for="floatingTextarea">Purpose of Payment</label>
+                            </div>
+                            <hr>
+                            <div class="form-floating">
+                                <textarea class="form-control" placeholder="Comments To RM"
+                                    id="floatingTextarea" style="height: 150px;" name="rmcomments"></textarea>
                                 <label for="floatingTextarea">Comments To RM</label>
                             </div>
+                            <hr>
+                            <div class="form-floating">
+                            <button type="submit" class="btn btn-primary">Submit Your Transaction</button>
+                            <button class="btn btn-warning" style="margin-left:60%;" onclick="location.href='gohubtt.php'">Cancel</button>
+                            </div>
                         </div>
-                    </div>
+                </form>
             </div>
             <!-- Widget End -->
 
@@ -315,8 +419,7 @@ tr:nth-child(even) {
                         </div>
                         <div class="col-12 col-sm-6 text-center text-sm-end">
                             <!--/*** This template is free as long as you keep the footer author’s credit link/attribution link/backlink. If you'd like to use the template without the footer author’s credit link/attribution link/backlink, you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". Thank you for your support. ***/-->
-                            Designed By <a href="https://htmlcodex.com">HTML Codex</a>
-                            <br>Distributed By: <a href="https://themewagon.com" target="_blank">ThemeWagon</a>
+                            Designed By <a href="https://htmlcodex.com">Abel & Safari</a>
                         </div>
                     </div>
                 </div>
@@ -349,6 +452,18 @@ tr:nth-child(even) {
 
     <!-- Template Javascript -->
     <script src="js/main.js"></script>
+    <script>
+$(document).ready(function () {
+    $("input[name='currency']").change(function () {
+        var maxAllowed = 1;
+        var cnt = $("input[name='currency']:checked").length;
+        if (cnt > maxAllowed) {
+            $(this).prop("checked", "");
+            alert('You can only select ' + maxAllowed + ' currency!!');
+        }
+    });
+});
+    </script>
 </body>
 
 </html>

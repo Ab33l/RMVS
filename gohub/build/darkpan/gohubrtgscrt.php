@@ -92,6 +92,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 
     $stmt->execute();
     $stmt->close();
+    $_SESSION["rtgs_success"] = true;
     header("location: /gohub/build/darkpan/gohubrtgs.php");
 }
 ?>
@@ -178,7 +179,7 @@ tr:nth-child(even) {
         <div class="sidebar pe-4 pb-3">
             <nav class="navbar bg-secondary navbar-dark">
                 <a href="gohubhome.php" class="navbar-brand mx-4 mb-3">
-                    <h3 class="text-primary"><i class="fa fa-user-edit me-2"></i>GoHub</h3>
+                    <img src="../assets/img/icons/Logo.png" height="35" alt="logo" />
                 </a>
                 <div class="d-flex align-items-center ms-4 mb-4">
                     <div class="position-relative">
@@ -191,7 +192,7 @@ tr:nth-child(even) {
                     </div>
                 </div>
                 <div class="navbar-nav w-100">
-                    <a href="index.html" class="nav-item nav-link"><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
+                    <a href="gohubhome.php" class="nav-item nav-link"><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-laptop me-2"></i>Account</a>
                         <div class="dropdown-menu bg-transparent border-0">
@@ -200,9 +201,9 @@ tr:nth-child(even) {
                             <a href="element.html" class="dropdown-item">Business Account</a>
                         </div>
                     </div>
-                    <a href="widget.html" class="nav-item nav-link active"><i class="fa fa-th me-2"></i>RTGS</a>
-                    <a href="form.html" class="nav-item nav-link"><i class="fa fa-keyboard me-2"></i>Tele-Transfers</a>
-                    <a href="table.html" class="nav-item nav-link"><i class="fa fa-table me-2"></i>Fixed Deposits</a>
+                    <a href="gohubrtgs.php" class="nav-item nav-link active"><i class="fa fa-th me-2"></i>RTGS</a>
+                    <a href="gohubtt.php" class="nav-item nav-link"><i class="fa fa-keyboard me-2"></i>Tele-Transfers</a>
+                    <a href="gohubfd.php" class="nav-item nav-link"><i class="fa fa-table me-2"></i>Fixed Deposits</a>
                     <a href="chart.html" class="nav-item nav-link"><i class="fa fa-chart-bar me-2"></i>Charts</a>
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="far fa-file-alt me-2"></i>Pages</a>
@@ -223,7 +224,7 @@ tr:nth-child(even) {
         <div class="content">
             <!-- Navbar Start -->
             <nav class="navbar navbar-expand bg-secondary navbar-dark sticky-top px-4 py-0">
-                <a href="index.html" class="navbar-brand d-flex d-lg-none me-4">
+                <a href="gohubhome.php" class="navbar-brand d-flex d-lg-none me-4">
                     <h2 class="text-primary mb-0"><i class="fa fa-user-edit"></i></h2>
                 </a>
                 <a href="#" class="sidebar-toggler flex-shrink-0">
@@ -305,12 +306,12 @@ tr:nth-child(even) {
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
                             <img class="rounded-circle me-lg-2" src="img/user.jpg" alt="" style="width: 40px; height: 40px;">
-                            <span class="d-none d-lg-inline-flex">Kyle Murray</span>
+                            <span class="d-none d-lg-inline-flex"><?php echo $_SESSION["full_name"]; ?></span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-end bg-secondary border-0 rounded-0 rounded-bottom m-0">
                             <a href="#" class="dropdown-item">My Profile</a>
                             <a href="#" class="dropdown-item">Settings</a>
-                            <a href="#" class="dropdown-item">Log Out</a>
+                            <a href="/gohub/build/rmvs-login/signout.php" class="dropdown-item">Log Out</a>
                         </div>
                     </div>
                 </div>
@@ -374,7 +375,7 @@ tr:nth-child(even) {
                             </div>
                             <div class="form-floating mb-3">
                                 <input type="number" class="form-control" id="floatingInput" min="1"
-                                    placeholder="Conversion Rate" name="conrate" required>
+                                    placeholder="Conversion Rate" name="conrate">
                                 <label for="floatingInput">Conversion Rate</label>
                             </div>
                             <div class="form-floating">
@@ -408,8 +409,7 @@ tr:nth-child(even) {
                         </div>
                         <div class="col-12 col-sm-6 text-center text-sm-end">
                             <!--/*** This template is free as long as you keep the footer author’s credit link/attribution link/backlink. If you'd like to use the template without the footer author’s credit link/attribution link/backlink, you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". Thank you for your support. ***/-->
-                            Designed By <a href="https://htmlcodex.com">HTML Codex</a>
-                            <br>Distributed By: <a href="https://themewagon.com" target="_blank">ThemeWagon</a>
+                            Designed By <a href="https://htmlcodex.com">Abel & Safari</a>
                         </div>
                     </div>
                 </div>

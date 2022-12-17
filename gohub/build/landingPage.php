@@ -41,12 +41,13 @@
         <div class="container"><a class="navbar-brand" href="index.html"><img src="assets/img/icons/Logo.png" height="35" alt="logo" /></a><button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
           <div class="collapse navbar-collapse border-top border-lg-0 mt-4 mt-lg-0" id="navbarSupportedContent">
             <ul class="navbar-nav ms-auto pt-2 pt-lg-0 font-base align-items-center">
-              <li class="nav-item"><a class="nav-link px-3" href="#product">Product</a></li>
+            <li class="nav-item"><a class="nav-link pl-3 me-3" target="_blank" href="../gazette/gazette.php">The Gazette</a></li>
+              <li class="nav-item"><a class="nav-link px-3" href="#product">Products</a></li>
               <li class="nav-item"><a class="nav-link px-3" href="#customers">Customers</a></li>
               <li class="nav-item"><a class="nav-link px-3" href="#pricing">Benefits</a></li>
               <li class="nav-item"><a class="nav-link pl-3 me-3" href="#docs">About Us</a></li>
             </ul>
-            <a href='./rmvs-login/signin.php'><button class="btn btn-primary">Sign In</button></a>
+            <a href='./rmvs-login/signin.php' target="_blank"><button class="btn btn-primary">Sign In</button></a>
           </div>
         </div>
       </nav>
@@ -60,7 +61,7 @@
             <div class="col-md-9 col-xxl-5 text-md-start text-center py-6 pt-8">
               <h1 class="fs-4 fs-md-5 fs-xxl-4" data-zanim-xs='{"delay":0.3}' data-zanim-trigger="scroll">Balance agility with stability</h1>
               <p class="fs-1" data-zanim-xs='{"delay":0.5}' data-zanim-trigger="scroll">Gohub provides you with the best platform to monitor and initiate your transactions in a stable, flexible and seamless environment. </p>
-              <div class="d-flex flex-column flex-sm-row justify-content-center justify-content-md-start mt-5" data-zanim-xs='{"delay":0.5}' data-zanim-trigger="scroll"><a class="btn btn-sm btn-primary me-1" href="./rmvs-login/index.html" role="button">Get started</a><a class="btn btn-sm btn-default" href="#" role="button">Questions? Talk to our team<i class="fas fa-arrow-right ms-2"></i></a></div>
+              <div class="d-flex flex-column flex-sm-row justify-content-center justify-content-md-start mt-5" data-zanim-xs='{"delay":0.5}' data-zanim-trigger="scroll"><a class="btn btn-sm btn-primary me-1" href="./rmvs-login/index.html" role="button">Get started</a><a class="btn btn-sm btn-default" onclick="window.open('http://localhost:3000/')" role="button">Questions? Talk to our team<i class="fas fa-arrow-right ms-2"></i></a></div>
             </div>
           </div>
         </div>
@@ -106,8 +107,8 @@
       <!-- <section> begin ============================-->
       <section id="customers">
         <div class="container">
-          <h1 class="text-center display-5 fw-semi-bold" data-zanim-xs='{"delay":0.3}' data-zanim-trigger="scroll"> Proof makes increasing conversion simple</h1>
-          <p class="text-center fs-0 fs-md-1" data-zanim-xs='{"delay":0.5}' data-zanim-trigger="scroll"> Getting a conversion boost didn't used to be this easy. Luckily, you found Proof. Now <br class="d-none d-lg-block" />you have the tools to let your customer do the selling for you.</p>
+          <h1 class="text-center display-5 fw-semi-bold" data-zanim-xs='{"delay":0.3}' data-zanim-trigger="scroll"> GoHub makes Transaction Migration simple</h1>
+          <p class="text-center fs-0 fs-md-1" data-zanim-xs='{"delay":0.5}' data-zanim-trigger="scroll"> Getting to manage your Bank Transactions didn't used to be this easy. Luckily, you found GoHub. Now <br class="d-none d-lg-block" />you have the tool to let your manage you finances under one roof.</p>
           <div class="row mb-4 mt-6">
             <div class="col-md-6 col-lg-3 text-center"><img src="assets/img/icons/4.png" alt="Dashboard" style="width:95px;" />
               <h4 class="mt-3 lh-base">High Conversions</h4>
@@ -178,14 +179,14 @@
               <p class="fs-0 pe-xl-8" data-zanim-xs='{"delay":0.5}' data-zanim-trigger="scroll">We are committed to help our clients transact on the go with confidence</p>
               <div class="d-flex justify-content-space-between align-item-center my-3 mt-2">
                 <div>
-                  <h4 class="fw-normal fs-1">Drive</h4>
-                  <p class="my-1 fs-0 pe-xl-8">Drive when you want. Find opportunities around you.</p>
+                  <h4 class="fw-normal fs-1">Transaction Ease</h4>
+                  <p class="my-1 fs-0 pe-xl-8">Transact when you want. Define efficiency around you.</p>
                 </div>
                 <div>
-                  <h4 class="fw-normal fs-1">Ride</h4>
-                  <p class="my-1 fs-0 pe-xl-8">Tap your phone. Get where you're headed</p>
+                  <h4 class="fw-normal fs-1">News2Knowledge</h4>
+                  <p class="my-1 fs-0 pe-xl-8">Connect to our platform. Get the best investment opportunities</p>
                 </div>
-              </div><button class="btn btn-sm btn-primary my-4 me-1" href="#!" role="button">Get started</button><a class="btn btn-sm my-2 btn-default" href="#" role="button">Questions? Talk to our team<i class="fas fa-arrow-right ms-2"></i></a>
+              </div><button class="btn btn-sm btn-primary my-4 me-1" href="#!" role="button">Get started</button><a class="btn btn-sm my-2 btn-default"  onclick="window.open('http://localhost:3000/')" role="button">Questions? Talk to our team<i class="fas fa-arrow-right ms-2"></i></a>
             </div>
             <div class="col-md-6 mb-4"><img class="w-100" src="assets/img/illustration/4.png" alt="..." /></div>
           </div>
@@ -203,17 +204,17 @@
             <div class="col-md-6 mb-4"><img class="w-100" src="assets/img/illustration/5.png" alt="..." /></div>
             <div class="col-md-6 text-center text-md-start">
               <h4 class="fs-3 fw-normal" data-zanim-xs='{"delay":0.3}' data-zanim-trigger="scroll">Move the way you want, <br />Roads are open</h4>
-              <p class="fs-0 pe-xl-7" data-zanim-xs='{"delay":0.5}' data-zanim-trigger="scroll">Opportunity is everything. Get out there and find it with Uber.</p>
+              <p class="fs-0 pe-xl-7" data-zanim-xs='{"delay":0.5}' data-zanim-trigger="scroll">Opportunity is everything. Get out there and find it with GoHub.</p>
               <div class="d-flex justify-content-center align-item-center my-3 mt-2">
                 <div>
-                  <h4 class="fw-normal fs-1">Route</h4>
-                  <p class="my-1 fs-0 pe-xl-8">Route among the safe roads. Find what's waiting for you.</p>
+                  <h4 class="fw-normal fs-1">Easier, Faster Routing</h4>
+                  <p class="my-1 fs-0 pe-xl-8">Route Transactions through our safe and seamless roads.</p>
                 </div>
                 <div>
-                  <h4 class="fw-normal fs-1">Share</h4>
-                  <p class="my-1 fs-0 pe-xl-8">Your caring gets it's way. Let your people know.</p>
+                  <h4 class="fw-normal fs-1">Erudite, Better Investment</h4>
+                  <p class="my-1 fs-0 pe-xl-8">The power to make better investements is at your palms.</p>
                 </div>
-              </div><button class="btn btn-sm btn-primary btn-bg-purple my-4 me-1" href="#!" role="button">Get started</button><a class="btn btn-sm my-2 btn-default" href="#" role="button">Questions? Talk to our team<i class="fas fa-arrow-right ms-2"></i></a>
+              </div><button class="btn btn-sm btn-primary btn-bg-purple my-4 me-1" href="#!" role="button">Get started</button><a class="btn btn-sm my-2 btn-default" onclick="window.open('http://localhost:3000/')" role="button">Questions? Talk to our team<i class="fas fa-arrow-right ms-2"></i></a>
             </div>
           </div>
         </div><!-- end of .container-->
@@ -264,7 +265,7 @@
       </section>
 
       <!-- ============================================-->
-      <!-- <section> begin ============================-->
+      <!-- <section> begin 
       <section class="bg-200" id="cta">
         <div class="container">
           <div class="row align-items-center">
@@ -276,8 +277,8 @@
               <div class="input-group"> <input class="form-control" type="text" placeholder="Email Address" /><button class="btn btn-primary rounded-start-0 px-3" type="submit">Get Started</button></div>
             </div>
           </div>
-        </div><!-- end of .container-->
-      </section><!-- <section> close ============================-->
+        </div>end of .container
+      </section><section> close ============================-->
       <!-- ============================================-->
 
       <section class="py-0 bg-1000">
@@ -312,7 +313,7 @@
             <div class="col-6 col-sm-4 col-lg-2 mb-3 order-3 order-sm-2">
               <h5 class="lh-lg fw-bold text-light font-sans-serif"> Support</h5>
               <ul class="list-unstyled text-light mb-md-4 mb-lg-0">
-                <li class="lh-lg"><a class="text-500 footer-link text-light" href="#!">Terminal Conditions</a></li>
+                <li class="lh-lg"><a class="text-500 footer-link text-light" href="#!">Terms ans Conditions</a></li>
                 <li class="lh-lg"><a class="text-500 footer-link text-light" href="#!">About Us</a></li>
                 <li class="lh-lg"><a class="text-500 footer-link text-light" href="#!">Contact US</a></li>
                 <li class="lh-lg"><a class="text-500 footer-link text-light" href="#!">Terms of Use</a></li>

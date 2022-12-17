@@ -5,7 +5,7 @@ session_start();
  
 // Check if the user is already logged in, if yes then redirect him to welcome page
 if(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true){
-    header("location: index.html");
+    header("location: /gohub/gohubAdmin/darkpanBO/gohubhomeBO.php");
     exit;
 }
 
@@ -35,7 +35,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     // Validate credentials
     if(empty($abNumber_err) && empty($password_err)){
         // Prepare a select statement
-        $sql = "SELECT staffId, abNumber, userType, password FROM staff WHERE abNumber = ?";
+        $sql = "SELECT staffId, abNumber, userType, status, password FROM staff WHERE abNumber = ?";
         
         if($stmt = mysqli_prepare($db, $sql)){
             // Bind variables to the prepared statement as parameters
@@ -52,9 +52,9 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                 // Check if username exists, if yes then verify password
                 if(mysqli_stmt_num_rows($stmt) == 1){                    
                     // Bind result variables
-                    mysqli_stmt_bind_result($stmt, $staffId, $abNumber, $userType, $hashed_password);
+                    mysqli_stmt_bind_result($stmt, $staffId, $abNumber, $userType, $status, $hashed_password);
                     if(mysqli_stmt_fetch($stmt)){
-                        if($newpassword == $hashed_password){
+                        if($newpassword == $hashed_password && $status == 1){
 							//$row = mysqli_fetch_assoc($stmt);
                             // Password is correct, so start a new session
                             session_start();
@@ -62,6 +62,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 							$_SESSION["abNumber"] = $abNumber;
 							$_SESSION["staffId"] = $staffId;
 							$_SESSION["userType"] = $userType;
+							$_SESSION["log_time"] = false;
                             
                             // Store data in session variables
                             //$_SESSION["loggedin"] = $sessionId;
@@ -70,7 +71,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                             //$_SESSION["email_address"] = $email_address;                            
                             
                             // Redirect user to welcome page
-                            header("location: index.html");
+                            header("location: /gohub/gohubAdmin/authenticator/index.php");;
                         } else{
                             // Password is not valid, display a generic error message
                             echo "Invalid Password.";
@@ -99,23 +100,39 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
   <head>
     <meta charset="utf-8">
   
+    <link rel="apple-touch-icon" sizes="180x180" href="favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicons/favicon-16x16.png">
+    <link rel="shortcut icon" type="image/x-icon" href="images/assets/img/favicons/favicon.ico">
+    <link rel="manifest" href="images/assets/img/favicons/manifest.json">
+    <meta name="msapplication-TileImage" content="images/assets/img/favicons/mstile-150x150.png">
+    <meta name="theme-color" content="#ffffff">
+
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+
+    <!-- Favicon -->
+    <link href="images/favicon.ico" rel="icon">
+
     <link rel="stylesheet" href="signin.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Back Office Sign In</title>
   </head>
   <body>
     <div class="wrapper">
       <div class="title-text">
         <div class="title login">
-Login Form</div>
+Login</div>
 <div class="title signup">
-Signup Form</div>
+Set Password</div>
 </div>
 <div class="form-container">
         <div class="slide-controls">
           <input type="radio" name="slide" id="login" checked>
           <input type="radio" name="slide" id="signup">
           <label for="login" class="slide login">Login</label>
-          <label for="signup" class="slide signup">Signup</label>
+          <label for="signup" class="slide signup">Reset Password</label>
           <div class="slider-tab">
 </div>
 </div>
@@ -127,15 +144,13 @@ Signup Form</div>
 <div class="field">
               <input type="password" placeholder="Password" name="password" required>
             </div>
-<div class="pass-link">
-<a href="#">Forgot password?</a></div>
 <div class="field btn">
               <div class="btn-layer">
 </div>
 <input type="submit" value="Login" name="login">
             </div>
-<div class="signup-link">
-Not a member? <a href="">Signup now</a></div>
+            <div class="signup-link">
+<a href="#">Forgot password?</a></div>
 </form>
 <form action="#" class="signup">
             <div class="field">

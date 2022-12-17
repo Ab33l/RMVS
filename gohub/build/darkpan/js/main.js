@@ -62,28 +62,25 @@
     // Chart Global Color
     Chart.defaults.color = "#6C7293";
     Chart.defaults.borderColor = "#000000";
+    var ttamt = sessionStorage.getItem("ttamt");
+    var rtgsamt = sessionStorage.getItem("rtgsamt");
 
 
     // Worldwide Sales Chart
-    var ctx1 = $("#worldwide-sales").get(0).getContext("2d");
+    var ctx1 = $("#newworldwide-sales").get(0).getContext("2d");
     var myChart1 = new Chart(ctx1, {
-        type: "bar",
+        type: "line",
         data: {
-            labels: ["2016", "2017", "2018", "2019", "2020", "2021", "2022"],
+            labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
             datasets: [{
-                    label: "USA",
-                    data: [15, 30, 55, 65, 60, 80, 95],
+                    label: "TT",
+                    data: [12235, 3043, 51245, 34265, 34550, 340000, 50000, 8500000],
                     backgroundColor: "rgba(235, 22, 22, .7)"
                 },
                 {
-                    label: "UK",
-                    data: [8, 35, 40, 60, 70, 55, 75],
+                    label: "RTGS",
+                    data: [8398, 33445, 4346, 6340, 3420 , 2310,5455, 217000],
                     backgroundColor: "rgba(235, 22, 22, .5)"
-                },
-                {
-                    label: "AU",
-                    data: [12, 25, 45, 55, 65, 70, 60],
-                    backgroundColor: "rgba(235, 22, 22, .3)"
                 }
             ]
             },

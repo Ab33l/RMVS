@@ -2,12 +2,16 @@
 include '../dbConfig.php';
 
 session_start();
-$instructionsId = $_SESSION['instructionsId'];        // Collecting data from query string
+//$instructionsId = $_SESSION['instructionsId'];        // Collecting data from query string
+$instructionsId = $_GET['instructionsId'];
 if(!is_numeric($instructionsId)){ // Checking data it is a number or not
 echo "Data Error" . $_SESSION['instructionsId'];    
 exit;
 }
 
+$query = $db->query("SELECT * FROM instructions WHERE instructionsId = $instructionsId");
+if($query->num_rows > 0){ 
+    while($row = $query->fetch_assoc()){
 ?>
 
 <!DOCTYPE html>
@@ -59,7 +63,7 @@ exit;
         .datepicker {
             z-index: 10000;
         }
-        table {
+        /* table {
   font-family: arial, sans-serif;
   border-collapse: collapse;
   width: 100%;
@@ -73,7 +77,7 @@ td, th {
 
 tr:nth-child(even) {
   background-color: #dddddd;
-}
+} */
     </style>
 </head>
 
@@ -92,7 +96,7 @@ tr:nth-child(even) {
         <div class="sidebar pe-4 pb-3">
             <nav class="navbar bg-secondary navbar-dark">
                 <a href="gohubhome.php" class="navbar-brand mx-4 mb-3">
-                    <h3 class="text-primary"><i class="fa fa-user-edit me-2"></i>GoHub</h3>
+                    <img src="../assets/img/icons/Logo.png" height="35" alt="logo" />
                 </a>
                 <div class="d-flex align-items-center ms-4 mb-4">
                     <div class="position-relative">
@@ -100,33 +104,22 @@ tr:nth-child(even) {
                         <div class="bg-success rounded-circle border border-2 border-white position-absolute end-0 bottom-0 p-1"></div>
                     </div>
                     <div class="ms-3">
-                        <h6 class="mb-0">Kyle Murray</h6>
+                        <h6 class="mb-0"><?php echo $_SESSION["full_name"]; ?></h6>
                         <span>Premier Client</span>
                     </div>
                 </div>
                 <div class="navbar-nav w-100">
-                    <a href="index.html" class="nav-item nav-link"><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
-                    <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-laptop me-2"></i>Account</a>
-                        <div class="dropdown-menu bg-transparent border-0">
-                            <a href="button.html" class="dropdown-item">Current Account</a>
-                            <a href="typography.html" class="dropdown-item">Savings Account</a>
-                            <a href="element.html" class="dropdown-item">Business Account</a>
-                        </div>
-                    </div>
-                    <a href="widget.html" class="nav-item nav-link active"><i class="fa fa-th me-2"></i>RTGS</a>
-                    <a href="form.html" class="nav-item nav-link"><i class="fa fa-keyboard me-2"></i>Tele-Transfers</a>
-                    <a href="table.html" class="nav-item nav-link"><i class="fa fa-table me-2"></i>Fixed Deposits</a>
-                    <a href="chart.html" class="nav-item nav-link"><i class="fa fa-chart-bar me-2"></i>Charts</a>
-                    <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="far fa-file-alt me-2"></i>Pages</a>
-                        <div class="dropdown-menu bg-transparent border-0">
-                            <a href="signin.html" class="dropdown-item">Sign In</a>
-                            <a href="signup.html" class="dropdown-item">Sign Up</a>
-                            <a href="404.html" class="dropdown-item">404 Error</a>
-                            <a href="blank.html" class="dropdown-item">Blank Page</a>
-                        </div>
-                    </div>
+                    <a href="gohubhome.php" class="nav-item nav-link"><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
+                    <?php
+                    if(($row['instructionItemId'] == '3')){
+                    ?>
+                    <a href="gohubrtgs.php" class="nav-item nav-link active"><i class="fa fa-th me-2"></i>RTGS</a>
+                    <a href="gohubtt.php" class="nav-item nav-link"><i class="fa fa-keyboard me-2"></i>Tele-Transfers</a>
+                    <?php }else{ ?>
+                    <a href="gohubrtgs.php" class="nav-item nav-link"><i class="fa fa-th me-2"></i>RTGS</a>    
+                    <a href="gohubtt.php" class="nav-item nav-link active"><i class="fa fa-keyboard me-2"></i>Tele-Transfers</a>
+                    <?php } ?>
+                    <a href="gohubfd.php" class="nav-item nav-link"><i class="fa fa-table me-2"></i>Fixed Deposits</a>
                 </div>
             </nav>
         </div>
@@ -144,58 +137,13 @@ tr:nth-child(even) {
                     <i class="fa fa-bars"></i>
                 </a>
                 <form class="d-none d-md-flex ms-4">
-                    <!--<input class="form-control bg-dark border-0" type="search" placeholder="Search">-->
-                    <div id="txn-dates">
-                        <input type="text" name="start" required placeholder="Start Date">
-                    <span>to</span>
-                        <input type="text" name="end" required placeholder="End Date">
-                        <button type="button" class="btn btn-outline-primary" id="search_txns">Search Transaction</button> 
-                    </div>
+                    <input class="form-control bg-dark border-0" type="search" placeholder="Search">
                 </form>
                 <div class="navbar-nav align-items-center ms-auto">
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                            <i class="fa fa-envelope me-lg-2"></i>
-                            <span class="d-none d-lg-inline-flex">Message</span>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-end bg-secondary border-0 rounded-0 rounded-bottom m-0">
-                            <a href="#" class="dropdown-item">
-                                <div class="d-flex align-items-center">
-                                    <img class="rounded-circle" src="img/user.jpg" alt="" style="width: 40px; height: 40px;">
-                                    <div class="ms-2">
-                                        <h6 class="fw-normal mb-0">Jhon send you a message</h6>
-                                        <small>15 minutes ago</small>
-                                    </div>
-                                </div>
-                            </a>
-                            <hr class="dropdown-divider">
-                            <a href="#" class="dropdown-item">
-                                <div class="d-flex align-items-center">
-                                    <img class="rounded-circle" src="img/user.jpg" alt="" style="width: 40px; height: 40px;">
-                                    <div class="ms-2">
-                                        <h6 class="fw-normal mb-0">Jhon send you a message</h6>
-                                        <small>15 minutes ago</small>
-                                    </div>
-                                </div>
-                            </a>
-                            <hr class="dropdown-divider">
-                            <a href="#" class="dropdown-item">
-                                <div class="d-flex align-items-center">
-                                    <img class="rounded-circle" src="img/user.jpg" alt="" style="width: 40px; height: 40px;">
-                                    <div class="ms-2">
-                                        <h6 class="fw-normal mb-0">Jhon send you a message</h6>
-                                        <small>15 minutes ago</small>
-                                    </div>
-                                </div>
-                            </a>
-                            <hr class="dropdown-divider">
-                            <a href="#" class="dropdown-item text-center">See all message</a>
-                        </div>
-                    </div>
-                    <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
                             <i class="fa fa-bell me-lg-2"></i>
-                            <span class="d-none d-lg-inline-flex">Notification</span>
+                            <span class="d-none d-lg-inline-flex">Notifications</span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-end bg-secondary border-0 rounded-0 rounded-bottom m-0">
                             <a href="#" class="dropdown-item">
@@ -219,12 +167,12 @@ tr:nth-child(even) {
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
                             <img class="rounded-circle me-lg-2" src="img/user.jpg" alt="" style="width: 40px; height: 40px;">
-                            <span class="d-none d-lg-inline-flex">Kyle Murray</span>
+                            <span class="d-none d-lg-inline-flex"><?php echo $_SESSION["full_name"]; ?></span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-end bg-secondary border-0 rounded-0 rounded-bottom m-0">
                             <a href="#" class="dropdown-item">My Profile</a>
                             <a href="#" class="dropdown-item">Settings</a>
-                            <a href="#" class="dropdown-item">Log Out</a>
+                            <a href="/gohub/build/rmvs-login/signout.php" class="dropdown-item">Log Out</a>
                         </div>
                     </div>
                 </div>
@@ -234,12 +182,29 @@ tr:nth-child(even) {
 
             <!-- Widget Start -->
             <div class="container-fluid pt-4 px-4">
-                <table>
-                    <?php
-                            $query = $db->query("SELECT * FROM instructions WHERE instructionsId = $instructionsId");
-                            if($query->num_rows > 0){ 
-                                while($row = $query->fetch_assoc()){
+            <div class="form-floating">
+            <?php
+                if(($row['instructionItemId'] == '3')){
+                ?>
+                <button class="btn btn-primary" onclick="location.href='gohubrtgs.php'">Back</button>
+                <?php }else{
+                ?>
+                <button class="btn btn-primary" onclick="location.href='gohubtt.php'">Back</button>
+                <?php } ?>
+            </div>
+            <hr>
+            <div class="bg-secondary text-center rounded p-4">
+            <div class="table-responsive">
+            <table class="table text-start align-middle table-bordered table-hover mb-0">
+                    <tr>
+                        <td>Transaction Reference</td>
+                        <td>
+                            <?php 
+                            $result = uniqid();
+                            echo $result; 
                             ?>
+                        </td>
+                    </tr>
                     <tr>
                         <td>Transaction Type</td>
                         <td>
@@ -274,7 +239,7 @@ tr:nth-child(even) {
                     </tr>
                     <tr>
                         <td>Amount</td>
-                        <td><?php echo $row['currency']. ' ' .$row['amount']; ?></td>
+                        <td><?php echo $row['currency']. ' ' .number_format($row['amount'],2); ?></td>
                     </tr>
                     <tr>
                         <td>Rate</td>
@@ -329,6 +294,8 @@ tr:nth-child(even) {
                         <p>Specific Transaction Details Being Processed</p>
                     <?php } ?>
                 </table>
+                    </div>
+                    </div>
             </div>
             <!-- Widget End -->
 
@@ -342,8 +309,7 @@ tr:nth-child(even) {
                         </div>
                         <div class="col-12 col-sm-6 text-center text-sm-end">
                             <!--/*** This template is free as long as you keep the footer author’s credit link/attribution link/backlink. If you'd like to use the template without the footer author’s credit link/attribution link/backlink, you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". Thank you for your support. ***/-->
-                            Designed By <a href="https://htmlcodex.com">HTML Codex</a>
-                            <br>Distributed By: <a href="https://themewagon.com" target="_blank">ThemeWagon</a>
+                            Designed By <a href="https://htmlcodex.com">Abel & Safari</a>
                         </div>
                     </div>
                 </div>
